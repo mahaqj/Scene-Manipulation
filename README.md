@@ -74,15 +74,23 @@ You’ll be prompted to:
 
 ---
 
-## What Happens at Each Step
+## How it Works
 
-1. `spaCy` parses the instruction to extract intent and keywords  
-2. DETR detects the target object in the image  
-3. SAM segments it precisely  
-4. The object's position is changed depending on the instruction
-5. A final output image is shown
+1. `spaCy` extracts the object, action, direction, and lighting from the user's instruction
+2. DETR detects the object in the image
+3. SAM generates a precise mask of the object
+4. The object is cut out using the selected mask
+5. Stable Diffusion inpaints the region where the object was removed
+6. It is then repositioned based on the instruction and pasted onto the updated image
+7. Results are displayed side-by-side
 
-![image](https://github.com/user-attachments/assets/39ba79de-8881-4422-a336-2d54111a4380)
+---
+
+## Example Outputs
+
+![Figure_1_updated](https://github.com/user-attachments/assets/e781719c-ac80-4bbe-97a0-4bad75f66a08)
+![Figure_12](https://github.com/user-attachments/assets/4bcfcd6d-ba6c-4774-9b92-caafffadb9c5)
+![Figure_13](https://github.com/user-attachments/assets/de5830c1-4a34-4352-89a5-ce6f6bce289e)
 
 ---
 
