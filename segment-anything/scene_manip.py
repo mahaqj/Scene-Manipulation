@@ -6,9 +6,26 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
 from segment_anything import sam_model_registry, SamPredictor
+import tkinter as tk
+from tkinter import filedialog
 
 # -------------------------------------------------------------------------------------
-# step 1 -> text instruction parsing
+# step 1 -> load image
+# -------------------------------------------------------------------------------------
+tk.Tk().withdraw() 
+image_path = filedialog.askopenfilename(title="select an image", filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp")]) # user selects image
+
+if not image_path:
+    print("no image selected")
+    exit()
+
+image_pil = Image.open(image_path)
+image_pil = Image.open(image_path)
+image_cv2 = cv2.imread(image_path)
+image_rgb = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2RGB)
+
+# -------------------------------------------------------------------------------------
+# step 2 -> text instruction parsing
 # -------------------------------------------------------------------------------------
 nlp = spacy.load("en_core_web_sm") # small english model
 print("-------------------------------------------------------------------------------")
@@ -46,14 +63,6 @@ for word in instruction.split():
         break
 
 print(f"parsed: object-{target_object}, action-{action}, direction-{direction}, lighting-{lighting}") # select the first everything for now
-
-# -------------------------------------------------------------------------------------
-# step 2 -> load image
-# -------------------------------------------------------------------------------------
-image_path = "dog1.jpg"
-image_pil = Image.open(image_path)
-image_cv2 = cv2.imread(image_path)
-image_rgb = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2RGB)
 
 # -------------------------------------------------------------------------------------
 # step 3 -> detr object detection
@@ -189,7 +198,7 @@ else:
 # -------------------------------------------------------------------------------------
 # step 9 -> final visualization
 # -------------------------------------------------------------------------------------
-fig, axes = plt.subplots(1, 5, figsize=(25, 6))
+fig, axes = plt.subplots(1, 6, figsize=(25, 6))
 
 # original image with box
 axes[0].imshow(image_rgb)
