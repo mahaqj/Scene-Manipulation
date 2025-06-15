@@ -97,22 +97,9 @@ Instruction: Move the horse to the left
 
 ---
 
-## Tech Stack
-
-- Python  
-- [Segment Anything (SAM)](https://github.com/facebookresearch/segment-anything)  
-- [DETR](https://github.com/facebookresearch/detectron2)  
-- OpenCV, PIL, spaCy
-
----
-
 ## Credits
 
 - [Segment Anything](https://github.com/facebookresearch/segment-anything) by Meta  
 - [DETR](https://github.com/facebookresearch/detectron2)  
 
----
-
-## Notes
-
-- `segment-anything/` contains only necessary files from the original repository by Meta AI
+Note: `segment-anything/` contains only necessary files from the original repository by Meta AI
