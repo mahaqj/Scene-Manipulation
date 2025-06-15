@@ -4,7 +4,12 @@ transformers
 opencv-python
 matplotlib
 numpy
+torch
+torchvision
 git+https://github.com/facebookresearch/segment-anything.git
 
-# after installing, run this once manually:
+# GUI support
+tk
+
+# after installing, run this manually once:
 # python -m spacy download en_core_web_sm
