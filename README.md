@@ -88,8 +88,11 @@ You’ll be prompted to:
 
 ## Example Outputs
 
+Instruction: Move the dog to the right and add sunset light
 ![Figure_1_updated](https://github.com/user-attachments/assets/e781719c-ac80-4bbe-97a0-4bad75f66a08)
+Instruction: Move the cat up
 ![Figure_12](https://github.com/user-attachments/assets/4bcfcd6d-ba6c-4774-9b92-caafffadb9c5)
+Instruction: Move the horse to the left
 ![Figure_13](https://github.com/user-attachments/assets/de5830c1-4a34-4352-89a5-ce6f6bce289e)
 
 ---
