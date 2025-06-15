@@ -1,0 +1,10 @@
+spacy
+Pillow
+transformers
+opencv-python
+matplotlib
+numpy
+git+https://github.com/facebookresearch/segment-anything.git
+
+# after installing, run this once manually:
+# python -m spacy download en_core_web_sm
