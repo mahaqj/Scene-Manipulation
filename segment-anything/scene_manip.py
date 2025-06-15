@@ -8,25 +8,27 @@ import numpy as np
 from segment_anything import sam_model_registry, SamPredictor
 import tkinter as tk
 from tkinter import filedialog
+from diffusers import StableDiffusionInpaintPipeline
+import torch
 
 # -------------------------------------------------------------------------------------
 # step 1 -> load image
 # -------------------------------------------------------------------------------------
-tk.Tk().withdraw() 
-image_path = filedialog.askopenfilename(title="select an image", filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp")]) # user selects image
+tk.Tk().withdraw() # opens a file picker to let the user select an image
+image_path = filedialog.askopenfilename(title="select an image", filetypes=[("Image files", "*.jpg *.jpeg *.png *.bmp")]) # selected image
 
 if not image_path:
     print("no image selected")
     exit()
 
-image_pil = Image.open(image_path)
-image_pil = Image.open(image_path)
-image_cv2 = cv2.imread(image_path)
-image_rgb = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2RGB)
+image_pil = Image.open(image_path) # loads the image for transformer models
+image_cv2 = cv2.imread(image_path) # loads the image for opencv and sam (numpy arrays)
+image_rgb = cv2.cvtColor(image_cv2, cv2.COLOR_BGR2RGB) # some libraries expect rgb
 
 # -------------------------------------------------------------------------------------
 # step 2 -> text instruction parsing
 # -------------------------------------------------------------------------------------
+# use spacy for part of speech tagging
 nlp = spacy.load("en_core_web_sm") # small english model
 print("-------------------------------------------------------------------------------")
 print("enter an instruction like: 'move the dog to the right and add sunset lighting)")
@@ -88,7 +90,7 @@ if not box:
     print("object not found in image :(")
     exit()
 
-x1, y1, x2, y2 = box
+x1, y1, x2, y2 = map(int, box)
 x_center = int((x1 + x2)/2)
 y_center = int((y1 + y2)/2)
 
@@ -154,10 +156,18 @@ crop = cutout[up:down, left:right] # cropped rgb image of target object only
 mask_crop = selected_mask[up:down, left:right] # mask part of cropped picture
 
 # -------------------------------------------------------------------------------------
-# step 6 -> inpaint the original image to remove the object
+# step 6 -> ai inpainting using diffusion
 # -------------------------------------------------------------------------------------
-inpaint_mask = (selected_mask * 255).astype(np.uint8)
-inpainted_image = cv2.inpaint(image_rgb, inpaint_mask, 3, cv2.INPAINT_TELEA)
+# create mask from box
+mask = np.zeros(image_rgb.shape[:2], dtype=np.uint8)
+mask[y1:y2, x1:x2] = 255
+mask_pil = Image.fromarray(mask)
+
+pipe = StableDiffusionInpaintPipeline.from_pretrained("stabilityai/stable-diffusion-2-inpainting", torch_dtype=torch.float32, safety_checker=None).to("cuda" if torch.cuda.is_available() else "cpu")
+prompt = f"fill empty background with natural background"
+inpainted_pil = pipe(prompt=prompt, image=image_pil, mask_image=mask_pil).images[0]
+inpainted_pil = inpainted_pil.resize(image_pil.size)
+inpainted_image = np.array(inpainted_pil)
 
 # -------------------------------------------------------------------------------------
 # step 7 -> calculate new location to move the object
