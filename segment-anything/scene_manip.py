@@ -198,7 +198,7 @@ else:
 # -------------------------------------------------------------------------------------
 # step 9 -> final visualization
 # -------------------------------------------------------------------------------------
-fig, axes = plt.subplots(1, 6, figsize=(25, 6))
+fig, axes = plt.subplots(1, 5, figsize=(25, 6))
 
 # original image with box
 axes[0].imshow(image_rgb)
